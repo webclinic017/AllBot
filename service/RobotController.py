@@ -7,7 +7,11 @@ robots_blueprint = Blueprint('robots_blueprint', __name__)
 
 @robots_blueprint.route('/robots', methods=['GET'])
 def getRobots():
-    data = {'email': session['userAccount']['email']}
+    users = db_operations.find()
+    output = [{'Name': user['Name'], 'Age': user['Age']} for user in users]
+    return jsonify(output)
+
+
     return {"robots": findAll(data)}, 200
 
 

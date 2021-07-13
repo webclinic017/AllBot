@@ -1,7 +1,6 @@
 from robots.ManagerRobots import DataManager
 from robots.RobotUtils import createRobotFromJson
 from flask import Blueprint, request
-from roteamento.OrderSend import *
 
 import json
 
@@ -16,15 +15,13 @@ def Play():
     robot = createRobotFromJson(json.loads(request.data))
     if robot:
         if manager is None:
-            manager = DataManager("C:\Program Files\MetaTrader 5\\terminal64.exe", 50498337, "Pkvxcav9")
-            '''manager = DataManager(session['userPreferences']['path'],
-                                  session['userPreferences']['login'],
-                                  session['userPreferences']['password'])'''
+            manager = DataManager()
         manager.addObserver(robot)
         if not manager.is_alive():
             manager.start()
         return {"Sucesso": "Sucesso"}, 200
-    return {"Sucesso": "Sucesso"}, 400
+    else:
+        return {"Error": "Error"}, 400
 
 
 @managerRobots_blueprint.route('/manager/stop', methods=['GET'])
@@ -36,8 +33,5 @@ def Stop():
 
 
 @managerRobots_blueprint.route('/manager/positions', methods=['GET'])
-def Positions():
-    nickName = json.loads(request.data)['nickName']
-    symbol = json.loads(request.data)['symbol']
-    returnJson = {'profit': getProfitRobot(symbol, nickName)}
-    return returnJson, 200
+def getSummary():
+    return {"Sucesso": "Sucesso"}, 200

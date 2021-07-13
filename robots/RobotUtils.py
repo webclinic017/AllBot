@@ -26,6 +26,10 @@ def createRobotFromJson(data):
     return False
 
 
+def getRobotDTO(data):
+
+
+
 def validateRobot(data):
     if data['nickName'] == '':
         return False

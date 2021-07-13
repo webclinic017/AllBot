@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class RobotSchema(Document):
-    email = StringField(max_length=100, require=True)
-    name = StringField(max_length=50, default="IFR2")
+    apikey = StringField(max_length=50, require=True)
+    secret = StringField(max_length=50, require=True)
     nickName = StringField(max_length=50, require=True)
     symbol = StringField(max_length=50, default="GBPUSD")
     timeframe = StringField(max_length=50, default="M1")

@@ -20,12 +20,10 @@ class Robot:
 
     def closeAll(self):
         """Encerra a ordem ou posição em aberto do robô"""
-        #closePosition(self.symbol, self.magicNumber)
 
     def checkTimeRestrictions(self):
         """Verifica as restrições de horário"""
         currentTime = datetime.now().time()
-        print(currentTime)
         if (currentTime >= self.intervalBegin) and (currentTime < self.intervalEnd):
             return True
         return False

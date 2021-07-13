@@ -1,12 +1,13 @@
-from mongoengine import *
+from flask import Flask, jsonify, request, redirect
+from flask_pymongo import PyMongo
+
 from database.RobotSchema import RobotSchema
-import json
-from flask import session
-from bson import ObjectId
 
-connection = connect(db='Allbot_Backend',
-                     host='mongodb+srv://AllBot:123qwe@cluster0.7lypu.mongodb.net/Allbot_Backend?retryWrites=true&w=majority')
+app = Flask(__name__)
+app.config["MONGO_URI"] = "mongodb+srv://dev:<password>@allbot.poydz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+mongo = PyMongo(app)
 
+app.run(debug=True)
 
 def save(data):
     a = RobotSchema().from_json(data)
