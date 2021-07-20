@@ -1,48 +1,49 @@
 from datetime import datetime
-from app.roteamento.RoteamentoManager import *
+from ..marketData.Roteamento import *
+from ..marketData.IndicatorsManager import indicators
+
 
 class Robot:
     """Define a estrutura básica de um robô"""
 
-    def __init__(self, nickName, symbol, timeframe, quantity, mode, intervalBegin, intervalEnd):
-        self.type = "Robot"
+    def __init__(self, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd):
+        self.robotType = "Robot"
+        self.key = key
+        self.secret = secret
         self.nickName = nickName
         self.symbol = symbol
         self.timeframe = timeframe
         self.quantity = quantity
-        self.mode = mode
         self.intervalBegin = intervalBegin
         self.intervalEnd = intervalEnd
-        self.magicNumber = 2424
         self.comb = self.symbol + '/' + self.timeframe
-
-    lastTime = 0
-
-    def closeAll(self):
-        """Encerra a ordem ou posição em aberto do robô"""
+        self.entryOrderId = None
+        self.inPosition = False
+        self.side = ''
 
     def checkTimeRestrictions(self):
         """Verifica as restrições de horário"""
         currentTime = datetime.now().time()
-        if (currentTime >= self.intervalBegin) and (currentTime < self.intervalEnd):
-            return True
-        return False
+        return (currentTime >= self.intervalBegin) and (currentTime < self.intervalEnd)
 
-    def isNewBar(self, actualTime):
-        global lastTime
-        if lastTime != actualTime:
-            lastTime = actualTime
-            return True
-        return False
+    def canSendOrder(self):
+        return not self.inPosition
 
     def buyMarket(self):
-        if market(self.symbol, 'buy', self.quantity)['clientOrderId'] is not None:
-            return True
-        return False
+        self.entryOrderId = buyMarket(self)
+        if self.entryOrderId:
+            self.inPosition = True
+            self.side = 'BUY'
 
     def sellMarket(self):
-        if market(self.symbol, 'sell', self.quantity)['clientOrderId'] is not None:
-            return True
-        return False
+        self.entryOrderId = buyMarket(self)
+        if self.entryOrderId:
+            self.inPosition = True
+            self.side = 'SELL'
 
+    def closePosition(self):
+        if closePosition(self):
+            self.inPosition = False
 
+    def price(self):
+        return indicators.getPrices(self.comb)

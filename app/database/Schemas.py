@@ -1,29 +1,43 @@
 from mongoengine import *
 from datetime import datetime
-
-timeframes = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M']
-symbols = ['BTCUSDT', 'LTCUSDT', 'XRPUSDT']
+from app.utils.RobotDataTypes import *
 
 
 class RobotSchema(Document):
-    apikey = StringField(max_length=50, require=True)
-    secret = StringField(max_length=50, require=True)
     owner = ObjectIdField(required=True)
+    apiKey = StringField(require=True)
+    secret = StringField(require=True)
+    nickName = StringField(max_length=50, default="Robô")
     symbol = StringField(max_length=10, require=True, choices=symbols)
-    timeframe = StringField(max_length=10, require=True, choices=timeframes)
-    lot = FloatField(min_value=0.00000001, default=0.00000001)
+    timeframe = StringField(max_length=2, require=True, choices=timeframes)
+    quantity = FloatField(required=True)
+    useInterval = BooleanField(default=False)
     intervalBegin = DateTimeField(default=datetime(2021, 12, 12, 0, 0, 0))
     intervalEnd = DateTimeField(default=datetime(2021, 12, 12, 23, 59, 59))
+    started = BooleanField(default=False)
     meta = {'collection': 'robots', 'allow_inheritance': True}
 
 
-class IFR2(RobotSchema):
+class IFR2Schema(RobotSchema):
     periodIFR = IntField(min_value=2, max_value=100, default=2)
     upper = FloatField(min_value=2, max_value=100, default=90)
     lower = FloatField(min_value=2, max_value=100, default=10)
     periodMean = IntField(min_value=2, max_value=200, default=5)
 
 
-class CrossAverage(RobotSchema):
+class CrossAverageSchema(RobotSchema):
     periodFast = IntField(min_value=2, max_value=200, default=12)
     periodSlow = IntField(min_value=2, max_value=200, default=24)
+
+
+class PositionSchema(Document):
+    entryOrderId = IntField(required=True)
+    entryPrice = FloatField(required=True)
+    entryQuantity = FloatField(required=True)
+    entryCost = FloatField(required=True)
+    closeOrderId = IntField()
+    closePrice = FloatField()
+    closeQuantity = FloatField()
+    cummulativeQuoteQty = FloatField()
+    profit = FloatField()
+    closed = BooleanField(default=False)

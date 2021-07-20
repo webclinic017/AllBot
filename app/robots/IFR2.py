@@ -1,31 +1,35 @@
 from app.robots.Robot import Robot
-from app.robots.IndicatorsManager import *
+from ..marketData.IndicatorsManager import indicators
+from app.mobileNotify.SendNotify import *
+
 
 class IFR2(Robot):
     """Define o robô com a estratégia IFR2"""
 
-    def __init__(self, nickName, symbol, timeframe, quantity, mode, intervalBegin, intervalEnd, period, upper, lower, periodMean):
-        super().__init__(nickName, symbol, timeframe, quantity, mode, intervalBegin, intervalEnd)
+    def __init__(self, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, periodIFR, upper, lower, periodMean):
+        super().__init__(key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd)
         self.type = "IFR2"
-        self.period = period
+        self.periodIFR = periodIFR
         self.upper = upper
         self.lower = lower
         self.periodMean = periodMean
-        self.RSI = getIndicator(self.comb, 'RSI', [period])
-        self.SMA = getIndicator(self.comb, 'SMA', [periodMean])
+        self.RSI = indicators.getIndicator(self.comb, ['RSI', self.comb, periodIFR])
+        self.SMA = indicators.getIndicator(self.comb, ['SMA', self.comb, periodMean])
 
-    def newData(self, data):
+    def newData(self, data, closed):
         """Notificação de novos dados"""
+        if closed:
+            if self.canSendOrder():
+                rsi = self.RSI.values.iloc[-1]
+                if rsi < self.lower:
+                    self.buyMarket()
+                    print(self.nickName, "COMPRA")
+                    message("COMPRA")
+            elif self.inPosition:
+                rsi = self.RSI.values.iloc[-1]
+                if rsi > self.upper:
+                    self.sellMarket()
+                    print(self.nickName, "VENDA")
+                    message("VENDA")
 
-        if self.checkTimeRestrictions():
-            rsi = self.RSI.values[-1]
-            if rsi < self.lower:
-                self.buyMarket()
-                print(self.nickName, "COMPRA")
-            elif rsi > self.upper:
-                self.sellMarket()
-                print(self.nickName, "VENDA")
-        else:
-            price = data.close.iloc[-2]
-            sma = self.SMA.values[-1]
 
