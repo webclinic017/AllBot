@@ -1,7 +1,7 @@
-from .controllers.RobotController import robots_blueprint
-from .controllers.ManagerRobotsController import managerRobots_blueprint
-from .controllers.BacktestController import backtest_blueprint
-from .database import Connection
+from app.controllers.RobotController import robots_blueprint
+from app.controllers.ManagerRobotsController import managerRobots_blueprint
+from app.controllers.BacktestController import backtest_blueprint
+from app.database import Connection
 from flask import Flask
 from binance.lib.utils import config_logging
 import logging

@@ -1,6 +1,7 @@
+from app.marketData.Roteamento import *
+from app.marketData.IndicatorsManager import indicators
 from datetime import datetime
-from ..marketData.Roteamento import *
-from ..marketData.IndicatorsManager import indicators
+
 
 
 class Robot:

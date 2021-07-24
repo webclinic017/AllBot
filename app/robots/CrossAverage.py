@@ -1,5 +1,5 @@
 from app.robots.Robot import Robot
-from ..marketData.IndicatorsManager import indicators
+from app.marketData.IndicatorsManager import indicators
 
 
 class CrossAverage(Robot):

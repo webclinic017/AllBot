@@ -1,10 +1,6 @@
-import logging
-from binance.lib.utils import config_logging
-from binance.websocket.spot.websocket_client import SpotWebsocketClient as Client
 from app.robots.IFR2 import IFR2
 from app.marketData.IndicatorsManager import indicators
-
-config_logging(logging, logging.DEBUG)
+from binance.websocket.spot.websocket_client import SpotWebsocketClient as Client
 
 
 def getStream(symbol, timeframe):
@@ -14,10 +10,18 @@ def getStream(symbol, timeframe):
 class DataManager:
     """Thread responsável por notificar os objetos observadores com os novos dados"""
 
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
         self.observers = {}
         self.dataframes = {}
         self.client = Client()
+        print("chegou aqui")
 
     def on_message(self, data):
         if data['k']['x'] or True:

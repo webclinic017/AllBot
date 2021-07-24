@@ -1,5 +1,4 @@
 from binance.spot import Spot as Client
-from binance.lib.utils import config_logging
 from binance.error import ClientError
 from app.database.Schemas import *
 import logging

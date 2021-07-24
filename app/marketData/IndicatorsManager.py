@@ -29,6 +29,7 @@ class IndicatorManager:
     def __init__(self):
         self.indicators = {}
         self.prices = {}
+        print("--------")
 
     def getIndicator(self, comb, params):
         if comb not in self.prices:
@@ -61,5 +62,5 @@ class IndicatorManager:
         spot_client = Client(base_url="https://testnet.binance.vision")
         return pd.DataFrame(spot_client.klines(symbol, interval, limit=num))[4].astype('float64')
 
-
-indicators = IndicatorManager()
+if IndicatorManager._instance is None:
+    indicators = IndicatorManager()
