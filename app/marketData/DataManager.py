@@ -21,7 +21,6 @@ class DataManager:
         self.observers = {}
         self.dataframes = {}
         self.client = Client()
-        print("chegou aqui")
 
     def on_message(self, data):
         if data['k']['x'] or True:

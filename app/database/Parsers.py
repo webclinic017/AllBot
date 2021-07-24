@@ -26,3 +26,8 @@ def IFR2FromSchema(robotSchema):
                  robotSchema.lower,
                  robotSchema.periodMean)
     return robot
+
+
+
+
+

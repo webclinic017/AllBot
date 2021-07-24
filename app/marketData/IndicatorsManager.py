@@ -29,7 +29,6 @@ class IndicatorManager:
     def __init__(self):
         self.indicators = {}
         self.prices = {}
-        print("--------")
 
     def getIndicator(self, comb, params):
         if comb not in self.prices:

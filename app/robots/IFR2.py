@@ -1,6 +1,5 @@
 from app.robots.Robot import Robot
 from app.marketData.IndicatorsManager import indicators
-from app.mobileNotify.SendNotify import *
 
 
 class IFR2(Robot):
@@ -24,12 +23,10 @@ class IFR2(Robot):
                 if rsi < self.lower:
                     self.buyMarket()
                     print(self.nickName, "COMPRA")
-                    message("COMPRA")
             elif self.inPosition:
                 rsi = self.RSI.values.iloc[-1]
                 if rsi > self.upper:
                     self.sellMarket()
                     print(self.nickName, "VENDA")
-                    message("VENDA")
 
 

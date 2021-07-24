@@ -32,12 +32,10 @@ class CrossAverageSchema(RobotSchema):
 
 class PositionSchema(Document):
     entryOrderId = IntField(required=True)
-    entryPrice = FloatField(required=True)
     entryQuantity = FloatField(required=True)
-    entryCost = FloatField(required=True)
+    entryCummulativeQuoteQty = FloatField(required=True)
     closeOrderId = IntField()
-    closePrice = FloatField()
     closeQuantity = FloatField()
-    cummulativeQuoteQty = FloatField()
+    closeCummulativeQuoteQty = FloatField()
     profit = FloatField()
     closed = BooleanField(default=False)
