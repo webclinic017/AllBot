@@ -1,5 +1,6 @@
 from app.robots.IFR2 import IFR2
 
+
 def robotDTO(robot):
     if robot['_cls'] == "RobotSchema.IFR2Schema":
         robot['type'] = "IFR2"
@@ -13,7 +14,9 @@ def robotDTO(robot):
 
 
 def IFR2FromSchema(robotSchema):
-    robot = IFR2(robotSchema.apiKey,
+    inPosition = robotSchema.positions and robotSchema.positions[-1].open
+    robot = IFR2(str(robotSchema.id),
+                 robotSchema.apiKey,
                  robotSchema.secret,
                  robotSchema.nickName,
                  robotSchema.symbol,
@@ -21,13 +24,10 @@ def IFR2FromSchema(robotSchema):
                  robotSchema.quantity,
                  robotSchema.intervalBegin,
                  robotSchema.intervalEnd,
+                 inPosition,
                  robotSchema.periodIFR,
                  robotSchema.upper,
                  robotSchema.lower,
                  robotSchema.periodMean)
+    print("------robot", robot)
     return robot
-
-
-
-
-

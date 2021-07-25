@@ -5,8 +5,8 @@ from app.marketData.IndicatorsManager import indicators
 class CrossAverage(Robot):
     """Define o robô com a estratégia de cruzamento de médias móveis"""
 
-    def __init__(self, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, periodFast, periodSlow):
-        super().__init__(key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd)
+    def __init__(self, id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, periodFast, periodSlow):
+        super().__init__(id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd)
         self.type = "CROSSAVERAGE"
         self.periodFast = periodFast
         self.periodSlow = periodSlow

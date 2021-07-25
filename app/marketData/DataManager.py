@@ -36,6 +36,7 @@ class DataManager:
             observer.newData(data, closed)
 
     def addObserver(self, robot):
+        print("------", robot)
         """Adiciona um observador na lista correspondente a combinação (ativo + timeframe)"""
         comb = robot.comb
         if comb in self.observers:
