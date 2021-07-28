@@ -1,5 +1,5 @@
 from app.database.Schemas import *
-from app.utils.message import *
+from app.utils.Message import *
 from app.database.Parsers import *
 from flask import jsonify
 from bson import ObjectId
@@ -23,7 +23,7 @@ def update(data):
         values = data.copy()
         values.pop('id')
         robot = RobotSchema.objects(id=ObjectId(data['id'])).first()
-        if robot and robot.update(**values):
+        if robot and (str(robot.owner) == data['owner']) and robot.update(**values):
             return SUCCESS_UPDATE, 200
         return ERROR_NOT_UPDATED_ROBOT, 400
     except:
@@ -32,7 +32,9 @@ def update(data):
 
 def delete(data):
     try:
-        if RobotSchema.objects(id=ObjectId(data['id'])).delete():
+        robot = RobotSchema.objects(id=ObjectId(data['id'])).first()
+        if robot and (str(robot.owner) == data['owner']):
+            robot.delete()
             return SUCCESS_REMOVE, 200
         return ERROR_UNDELETED_ROBOT, 400
     except:
@@ -48,7 +50,10 @@ def findAll(data):
 
 def findOne(data):
     try:
-        return jsonify([robotDTO(robot) for robot in json.loads(RobotSchema.objects(id=ObjectId(data['id'])).to_json())]), 200
+        robot = RobotSchema.objects(id=ObjectId(data['id'])).first()
+        if robot and (str(robot.owner) == data['owner']):
+            return jsonify(robotDTO(json.loads(robot.to_json()))), 200
+        return RESOURCE_NOT_FOUND, 400
     except:
         return RESOURCE_NOT_FOUND, 400
 

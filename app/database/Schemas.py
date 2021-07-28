@@ -3,6 +3,11 @@ from datetime import datetime
 from app.utils.RobotDataTypes import *
 
 
+class BackTestSchema(Document):
+    stats = ListField(default=[])
+    date = DateTimeField(unique=True)
+    meta = {'collection': 'backtest'}
+
 class PositionSchema(EmbeddedDocument):
     entryOrderId = IntField(required=True)
     entryQuantity = FloatField(required=True)

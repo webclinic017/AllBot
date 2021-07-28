@@ -1,4 +1,5 @@
 from app.robots.IFR2 import IFR2
+from app.database.Schemas import IFR2Schema, CrossAverageSchema
 
 
 def robotDTO(robot):
@@ -29,5 +30,11 @@ def IFR2FromSchema(robotSchema):
                  robotSchema.upper,
                  robotSchema.lower,
                  robotSchema.periodMean)
-    print("------robot", robot)
     return robot
+
+
+def getRobotFromSchema(robotSchema):
+    if isinstance(robotSchema, IFR2Schema):
+        return IFR2FromSchema(robotSchema)
+    if isinstance(robotSchema, CrossAverageSchema):
+        return IFR2FromSchema(robotSchema)

@@ -1,10 +1,12 @@
 from app.backtest.IFR2Backtest import IFR2Backtest
 from app.backtest.CrossAverageBacktest import CrossAverageBacktest
-from app.database.Schemas import IFR2Schema, CrossAverageSchema
+from app.database.Schemas import IFR2Schema, CrossAverageSchema, BackTestSchema
 import pandas as pd
 from backtesting import Backtest
 from binance.spot import Spot as Client
 import numpy as np
+from datetime import date
+import json
 
 
 def getBacktest(robot):
@@ -17,6 +19,24 @@ def getBacktest(robot):
         df = getCandles(robot.symbol, robot.timeframe)
         bt = Backtest(df, CrossAverageBacktest, cash=100000, commission=0, exclusive_orders=False)
         return bt.run().to_json()
+
+
+def generateStats():
+    symbols = ['BTCUSDT']
+    timeframes = ['1m']
+    robots = [IFR2Backtest]
+    backtests = []
+    for timeframe in timeframes:
+        for symbol in symbols:
+            df = getCandles(symbol, timeframe)
+            for robot in robots:
+                bt = Backtest(df, robot, cash=100000, commission=0, exclusive_orders=False)
+                result = json.loads(bt.run().to_json())
+                result.pop("_strategy")
+                for key in result.keys():
+                    key.remove(".")
+                backtests.append(result)
+    return backtests
 
 
 def getCandles(symbol, timeframe):

@@ -10,3 +10,5 @@ ERROR_UNCREATED_ROBOT = {"error": "Não foi possível criar o robô"}
 ERROR_UNDELETED_ROBOT = {"error": "Não foi possível deletar o robô"}
 ERROR_NOT_UPDATED_ROBOT = {"error": "Não foi possível atualizar o robô"}
 ERROR_BACKTEST = {"error": "Não foi possível criar o backtest"}
+ERROR_AUTHORIZATION = {"error": "Erro de autorização"}
+
