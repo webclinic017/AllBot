@@ -4,8 +4,7 @@ from src.database.Parsers import getRobotFromSchema
 from bson import ObjectId
 from celery import Celery
 
-app = Celery('src', broker='pyamqp://guest@localhost//', include=['src'])
-
+app = Celery('tasks', broker='amqps://sbkoczrk:2SnKB2wOTCVwJ_LPjGkHLrTBxwKEfw5s@chimpanzee.rmq.cloudamqp.com/sbkoczrk')
 
 @app.task()
 def startRobot(id):

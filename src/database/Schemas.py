@@ -1,6 +1,6 @@
-from mongoengine import *
+from mongoengine import Document, EmbeddedDocument, ListField, DateTimeField, FloatField, IntField, BooleanField, StringField, EmbeddedDocumentListField, ObjectIdField
 from datetime import datetime
-from ..utils.RobotDataTypes import *
+from src.utils.RobotDataTypes import *
 
 class BackTestSchema(Document):
     stats = ListField(default=[])
