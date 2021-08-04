@@ -1,4 +1,5 @@
 from src.marketData.IndicatorsManager import indicators
+from src.marketData.RoteamentoManager import buyMarket
 from datetime import datetime
 
 
