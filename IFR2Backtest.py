@@ -4,13 +4,13 @@ import ta
 
 class IFR2Backtest(Strategy):
     name = 'IFR2'
-    periodRSI = 2
+    periodIFR = 2
     periodMean = 5
     lower = 10
     upper = 90
 
     def init(self):
-        self.RSI = self.I(ta.momentum.rsi, self.data.Close.s, self.periodRSI)
+        self.RSI = self.I(ta.momentum.rsi, self.data.Close.s, self.periodIFR)
         self.SMA = self.I(ta.trend.sma_indicator, self.data.Close.s, self.periodMean)
 
     def next(self):

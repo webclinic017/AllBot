@@ -1,13 +1,14 @@
-import pandas
 from IFR2Backtest import IFR2Backtest
 from CrossAverageBacktest import CrossAverageBacktest
+from Schemas import IFR2Schema, CrossAverageSchema
 import pandas as pd
 from backtesting import Backtest
 from binance.spot import Spot as Client
 import numpy as np
 
 
-def generateStats():
+
+def getRanking():
     symbols = ['BTCUSDT', 'ETHUSDT', 'XRPUSDT']
     timeframes = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h']
     robots = [IFR2Backtest, CrossAverageBacktest]
@@ -27,7 +28,7 @@ def generateStats():
 
                 dict = result.to_dict()
                 for oldKey in list(dict):
-                    if isinstance(dict[oldKey], pandas._libs.tslibs.timedeltas.Timedelta):
+                    if isinstance(dict[oldKey], pd._libs.tslibs.timedeltas.Timedelta):
                         dict[oldKey] = str(dict[oldKey])
                     dict[oldKey.replace('.', '').replace(' ', '').replace('#', '')] = dict.pop(oldKey)
 
@@ -38,6 +39,20 @@ def generateStats():
 
 
 def getCandles(symbol, timeframe):
+
+    # abrir o csv do symbol (1m)
+
+    # concatenar com o da binance (1m)
+
+
+    # salvar (1m)
+
+
+    # resample
+
+    # return
+
+
     df = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close_time'])
     spot_client = Client(base_url="https://api.binance.com")
     candles = spot_client.klines(symbol, timeframe, limit=1000)
@@ -62,3 +77,33 @@ def getCandles(symbol, timeframe):
     df['Date'] = pd.to_datetime(df['Date'], unit='ms')
     df.set_index('Date', inplace=True)
     return df
+
+
+def getBacktest(robotSchema):
+    if isinstance(robotSchema, IFR2Schema):
+        robotType = IFR2Backtest
+        robotType.periodIFR = robotSchema.periodIFR
+        robotType.periodMean = robotSchema.periodMean
+        robotType.lower = robotSchema.lower
+        robotType.upper = robotSchema.upper
+        robotType.periodMean = robotSchema.periodMean
+    elif isinstance(robotSchema, CrossAverageSchema):
+        robotType = CrossAverageBacktest
+        robotType.periodFast = robotSchema.periodFast
+        robotType.periodSlow = robotSchema.periodSlow
+    df = getCandles(robotSchema.symbol, robotSchema.timeframe)
+    bt = Backtest(df, robotType, cash=100000, commission=0, exclusive_orders=False)
+    result = bt.run()
+    result['timeframe'] = robotSchema.timeframe
+    result['symbol'] = robotSchema.symbol
+    result['robot'] = robotType.name
+    del result['_strategy']
+    del result['_equity_curve']
+    del result['_trades']
+    dict = result.to_dict()
+    for oldKey in list(dict):
+        if isinstance(dict[oldKey], pd._libs.tslibs.timedeltas.Timedelta):
+            dict[oldKey] = str(dict[oldKey])
+        dict[oldKey.replace('.', '').replace(' ', '').replace('#', '')] = dict.pop(oldKey)
+        print("-----", robotSchema.comb())
+    return dict, robotSchema.comb()
