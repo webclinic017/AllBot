@@ -5,12 +5,14 @@ from RobotDataTypes import *
 
 class RankingSchema(Document):
     stats = ListField(default=[])
+    lastUpdate = DateTimeField(default=datetime(2018, 12, 12, 0, 0, 0))
     meta = {'collection': 'ranking'}
 
 
 class BackTestSchema(Document):
     stats = DictField(required=True)
     comb = DictField()
+    lastUpdate = DateTimeField(default=datetime(2018, 12, 12, 0, 0, 0))
     meta = {'collection': 'backtest'}
 
 
@@ -25,7 +27,7 @@ class PositionSchema(EmbeddedDocument):
     openResult = FloatField()
     open = BooleanField(default=False)
     side = StringField(require=True)
-    lastUpdate = DateTimeField(default=datetime(2021, 12, 12, 0, 0, 0))
+    lastUpdate = DateTimeField(default=datetime(2018, 12, 12, 0, 0, 0))
 
 
 class RobotSchema(Document):
@@ -34,7 +36,7 @@ class RobotSchema(Document):
     secret = StringField(require=True)
     nickName = StringField(max_length=50, default="Robô")
     symbol = StringField(max_length=10, require=True, choices=symbols)
-    timeframe = StringField(max_length=2, require=True, choices=timeframes)
+    timeframe = StringField(max_length=3, require=True, choices=timeframes)
     quantity = FloatField(required=True)
     useInterval = BooleanField(default=False)
     intervalBegin = DateTimeField(default=datetime(2021, 12, 12, 0, 0, 0))
@@ -69,4 +71,5 @@ class CrossAverageSchema(RobotSchema):
         return {"type": "CROSSAVERAGE",
                 "symbol": self.symbol,
                 "timeframe": self.timeframe,
-                "periodFast": self.periodFast}
+                "periodFast": self.periodFast,
+                "periodSlow": self.periodSlow}

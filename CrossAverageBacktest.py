@@ -5,7 +5,7 @@ import ta
 class CrossAverageBacktest(Strategy):
     periodFast = 5
     periodSlow = 21
-    name = 'CrossAverage'
+    name = 'CROSSAVERAGE'
 
     def init(self):
         self.mFast = self.I(ta.trend.sma_indicator, self.data.Close.s, self.periodFast)

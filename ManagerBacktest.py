@@ -39,20 +39,6 @@ def getRanking():
 
 
 def getCandles(symbol, timeframe):
-
-    # abrir o csv do symbol (1m)
-
-    # concatenar com o da binance (1m)
-
-
-    # salvar (1m)
-
-
-    # resample
-
-    # return
-
-
     df = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close_time'])
     spot_client = Client(base_url="https://api.binance.com")
     candles = spot_client.klines(symbol, timeframe, limit=1000)
@@ -105,5 +91,4 @@ def getBacktest(robotSchema):
         if isinstance(dict[oldKey], pd._libs.tslibs.timedeltas.Timedelta):
             dict[oldKey] = str(dict[oldKey])
         dict[oldKey.replace('.', '').replace(' ', '').replace('#', '')] = dict.pop(oldKey)
-        print("-----", robotSchema.comb())
-    return dict, robotSchema.comb()
+    return dict
