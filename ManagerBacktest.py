@@ -5,6 +5,7 @@ import pandas as pd
 from backtesting import Backtest
 from binance.spot import Spot as Client
 import numpy as np
+import math
 
 
 
@@ -28,9 +29,13 @@ def getRanking():
 
                 dict = result.to_dict()
                 for oldKey in list(dict):
+                    value = dict[oldKey]
+                    if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
+                        dict[oldKey] = 0
                     if isinstance(dict[oldKey], pd._libs.tslibs.timedeltas.Timedelta):
                         dict[oldKey] = str(dict[oldKey])
                     dict[oldKey.replace('.', '').replace(' ', '').replace('#', '')] = dict.pop(oldKey)
+
 
                 backtests.append(dict)
 
@@ -88,7 +93,11 @@ def getBacktest(robotSchema):
     del result['_trades']
     dict = result.to_dict()
     for oldKey in list(dict):
+        value = dict[oldKey]
+        if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
+            dict[oldKey] = 0
         if isinstance(dict[oldKey], pd._libs.tslibs.timedeltas.Timedelta):
             dict[oldKey] = str(dict[oldKey])
         dict[oldKey.replace('.', '').replace(' ', '').replace('#', '')] = dict.pop(oldKey)
     return dict
+

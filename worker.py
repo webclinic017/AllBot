@@ -8,6 +8,8 @@ from datetime import datetime
 
 app = Celery('tasks', broker=CELERY_BROKER_URL)
 
+print(CELERY_BROKER_URL)
+
 
 @app.task()
 def runRanking():
