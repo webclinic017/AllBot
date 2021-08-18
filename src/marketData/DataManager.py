@@ -19,7 +19,6 @@ class DataManager:
 
     def on_message(self, data):
         """Notificação de novos dados da exchange"""
-        print("dffdfdf")
         if data['k']['x'] or True:
             comb = data['k']['s'] + '/' + data['k']['i']
             self.notifyObservers(comb, data)

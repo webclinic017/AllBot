@@ -1,5 +1,5 @@
 from src.marketData.IndicatorsManager import indicators
-from src.marketData.RoteamentoManager import buyMarket
+from src.marketData.RoteamentoManager import buyMarket, sellMarket, closePosition
 from datetime import datetime
 
 
@@ -36,7 +36,7 @@ class Robot:
             self.side = 'BUY'
 
     def sellMarket(self):
-        self.entryOrderId = buyMarket(self)
+        self.entryOrderId = sellMarket(self)
         if self.entryOrderId:
             self.inPosition = True
             self.side = 'SELL'

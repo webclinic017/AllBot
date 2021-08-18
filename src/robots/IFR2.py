@@ -20,13 +20,14 @@ class IFR2(Robot):
         if closed:
             if self.canSendOrder():
                 rsi = self.RSI.values.iloc[-1]
-                print("----",rsi, self.lower)
+                print("----", rsi, self.lower)
                 if rsi < self.lower:
                     self.buyMarket()
                     print(self.nickName, "COMPRA")
             elif self.inPosition:
                 price = self.price()[-1]
                 mean = self.SMA.valeus.iloc[-1]
+                print("----", price, mean)
                 if price > mean:
                     self.closePosition()
                     print(self.nickName, "VENDA")

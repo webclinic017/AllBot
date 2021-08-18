@@ -1,4 +1,5 @@
 from src.database.Schemas import RobotSchema, PositionSchema
+from src.mobileNotify.SendNotify import message
 from binance.spot import Spot as Client
 from binance.error import ClientError
 from bson import ObjectId
@@ -26,6 +27,11 @@ def buyMarket(robot):
         position.entryCummulativeQuoteQty = float(response['cummulativeQuoteQty'])
         robotSchema.positions.append(position)
         robotSchema.save()
+
+        message('robot: ' + robot.nickName + '\n' +
+                'symbol: ' + robot.symbol + '\n' +
+                'side: BUY' + '\n' +
+                'quoteOrderQty: ' + position.entryQuantity)
         return response['orderId']
 
     except ClientError as error:
@@ -36,14 +42,12 @@ def buyMarket(robot):
         )
 
 
-def sellMarket(robot, price):
+def sellMarket(robot):
     params = {
         "symbol": robot.symbol,
         "side": "SELL",
         "type": "MARKET",
-        "timeInForce": "GTC",
-        "quantity": robot.quantity,
-        "price": price,
+        "quoteOrderQty": robot.quantity,
     }
     client = Client(robot.key, robot.secret, base_url=BASE_URL)
     try:
@@ -57,7 +61,12 @@ def sellMarket(robot, price):
         position.entryCummulativeQuoteQty = float(response['cummulativeQuoteQty'])
         robotSchema.positions.append(position)
         robotSchema.save()
+        message('robot: ' + robot.nickName + '\n' +
+                'symbol: ' + robot.symbol + '\n' +
+                'side: SELL' + '\n' +
+                'quoteOrderQty: ' + position.entryQuantity)
         return response['orderId']
+
     except ClientError as error:
         logging.error(
             "Found error. status: {}, error code: {}, error message: {}".format(
@@ -89,6 +98,11 @@ def closePosition(robot):
             position.closeCummulativeQuoteQty = float(response['cummulativeQuoteQty'])
             position.open = False
             robotSchema.save()
+
+            message('robot: ' + robot.nickName + '\n' +
+                   'symbol: ' + robot.symbol + '\n' +
+                   'side: ' + side + '\n' +
+                   'closeCummulativeQuoteQty: ' + position.closeCummulativeQuoteQty)
             return True
 
         except ClientError as error:
@@ -97,5 +111,3 @@ def closePosition(robot):
                     error.status_code, error.error_code, error.error_message
                 )
             )
-
-

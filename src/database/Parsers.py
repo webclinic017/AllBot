@@ -1,4 +1,5 @@
 from src.robots.IFR2 import IFR2
+from src.robots.CrossAverage import CrossAverage
 from src.database.Schemas import IFR2Schema, CrossAverageSchema
 
 
@@ -33,8 +34,25 @@ def IFR2FromSchema(robotSchema):
     return robot
 
 
+def CrossAverageFromSchema(robotSchema):
+    inPosition = robotSchema.positions and robotSchema.positions[-1].open
+    robot = CrossAverage(str(robotSchema.id),
+                         robotSchema.apiKey,
+                         robotSchema.secret,
+                         robotSchema.nickName,
+                         robotSchema.symbol,
+                         robotSchema.timeframe,
+                         robotSchema.quantity,
+                         robotSchema.intervalBegin,
+                         robotSchema.intervalEnd,
+                         inPosition,
+                         robotSchema.periodFast,
+                         robotSchema.periodSLow)
+    return robot
+
+
 def getRobotFromSchema(robotSchema):
     if isinstance(robotSchema, IFR2Schema):
         return IFR2FromSchema(robotSchema)
     if isinstance(robotSchema, CrossAverageSchema):
-        return IFR2FromSchema(robotSchema)
+        return CrossAverageFromSchema(robotSchema)

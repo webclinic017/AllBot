@@ -1,3 +1,5 @@
+from settings import DB, MONGO_URI
 from mongoengine import connect
 
-connection = connect(db='Bots', host="mongodb+srv://dev:groselha24@allbot.poydz.mongodb.net/Bots?retryWrites=true&w=majority")
+
+connection = connect(db=DB, host=MONGO_URI)
