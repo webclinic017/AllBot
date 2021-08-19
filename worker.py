@@ -7,7 +7,6 @@ from src.mobileNotify.SendNotify import message
 from bson import ObjectId
 from celery import Celery
 
-print(CELERY_BROKER_URL)
 app = Celery('tasks', broker=CELERY_BROKER_URL)
 
 

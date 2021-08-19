@@ -25,13 +25,14 @@ def buyMarket(robot):
         position.entryOrderId = response['orderId']
         position.entryQuantity = float(response['executedQty'])
         position.entryCummulativeQuoteQty = float(response['cummulativeQuoteQty'])
+        position.open = True
         robotSchema.positions.append(position)
         robotSchema.save()
 
         message('robot: ' + robot.nickName + '\n' +
                 'symbol: ' + robot.symbol + '\n' +
                 'side: BUY' + '\n' +
-                'quoteOrderQty: ' + position.entryQuantity)
+                'quoteOrderQty: ' + str(position.entryQuantity))
         return response['orderId']
 
     except ClientError as error:
@@ -59,12 +60,13 @@ def sellMarket(robot):
         position.entryOrderId = response['orderId']
         position.entryQuantity = float(response['executedQty'])
         position.entryCummulativeQuoteQty = float(response['cummulativeQuoteQty'])
+        position.open = True
         robotSchema.positions.append(position)
         robotSchema.save()
         message('robot: ' + robot.nickName + '\n' +
                 'symbol: ' + robot.symbol + '\n' +
                 'side: SELL' + '\n' +
-                'quoteOrderQty: ' + position.entryQuantity)
+                'quoteOrderQty: ' + str(position.entryQuantity))
         return response['orderId']
 
     except ClientError as error:
@@ -102,7 +104,7 @@ def closePosition(robot):
             message('robot: ' + robot.nickName + '\n' +
                    'symbol: ' + robot.symbol + '\n' +
                    'side: ' + side + '\n' +
-                   'closeCummulativeQuoteQty: ' + position.closeCummulativeQuoteQty)
+                   'closeCummulativeQuoteQty: ' + str(position.closeCummulativeQuoteQty))
             return True
 
         except ClientError as error:

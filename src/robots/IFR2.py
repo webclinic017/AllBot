@@ -21,7 +21,7 @@ class IFR2(Robot):
             if self.canSendOrder():
                 rsi = self.RSI.values.iloc[-1]
                 print("----", rsi, self.lower)
-                if rsi < self.lower:
+                if (rsi < self.lower) or True:
                     self.buyMarket()
                     print(self.nickName, "COMPRA")
             elif self.inPosition:
