@@ -1,1 +1,1 @@
-worker: celery -A worker worker -l debug
+worker: celery -A worker worker -l debug -Q backtest
