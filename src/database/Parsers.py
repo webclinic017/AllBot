@@ -47,7 +47,7 @@ def CrossAverageFromSchema(robotSchema):
                          robotSchema.intervalEnd,
                          inPosition,
                          robotSchema.periodFast,
-                         robotSchema.periodSLow)
+                         robotSchema.periodSlow)
     return robot
 
 
