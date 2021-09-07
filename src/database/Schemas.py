@@ -44,6 +44,8 @@ class RobotSchema(Document):
     mode = StringField(choices=modes, default='onlybuy')
     status = StringField(choices=status, default='inactive')
     positions = EmbeddedDocumentListField(PositionSchema)
+    chatID = StringField(max_length=50, default="")
+    onlyNotify = BooleanField(default=False)
     meta = {'collection': 'robots', 'allow_inheritance': True}
 
 
@@ -75,7 +77,13 @@ class CrossAverageSchema(RobotSchema):
                 "periodSlow": self.periodSlow}
 
 
+class BollingerBandsSchema(RobotSchema):
+    period = IntField(min_value=2, max_value=200, default=20)
+    stdDeviation = FloatField(min_value=0, max_value=3, default=2)
 
-
-
-
+    def comb(self):
+        return {"type": "BOLLINGERBANDS",
+                "symbol": self.symbol,
+                "timeframe": self.timeframe,
+                "period": self.period,
+                "stdDeviation": self.stdDeviation}

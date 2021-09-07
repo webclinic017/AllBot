@@ -16,6 +16,10 @@ class Indicator:
             self.values = ta.momentum.rsi(prices, self.params[2])
         elif self.params[0] == 'SMA':
             self.values = ta.trend.sma_indicator(prices, self.params[2])
+        elif self.params[0] == 'BBLower':
+            self.values = ta.volatility.bollinger_lband_indicator(prices, self.params[2], self.params[3])
+        elif self.params[0] == 'BBUpper':
+            self.values = ta.volatility.bollinger_hband_indicator(prices, self.params[2], self.params[3])
 
 
 class IndicatorManager:

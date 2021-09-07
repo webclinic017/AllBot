@@ -6,7 +6,7 @@ from datetime import datetime
 class Robot:
     """Define a estrutura básica de um robô"""
 
-    def __init__(self, id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition):
+    def __init__(self, id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition, chatID, onlyNotify):
         self.robotType = "Robot"
         self.id = id
         self.key = key
@@ -19,6 +19,8 @@ class Robot:
         self.intervalEnd = intervalEnd
         self.comb = self.symbol + '/' + self.timeframe
         self.inPosition = inPosition
+        self.chatID = chatID
+        self.onlyNotify = onlyNotify
         self.side = ''
 
     def checkTimeRestrictions(self):

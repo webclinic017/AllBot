@@ -5,8 +5,8 @@ from src.marketData.IndicatorsManager import indicators
 class IFR2(Robot):
     """Define o robô com a estratégia IFR2"""
 
-    def __init__(self, id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition, periodIFR, upper, lower, periodMean):
-        super().__init__(id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition)
+    def __init__(self, id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition, chatID, onlyNotify, periodIFR, upper, lower, periodMean):
+        super().__init__(id, key, secret, nickName, symbol, timeframe, quantity, intervalBegin, intervalEnd, inPosition, chatID, onlyNotify)
         self.type = "IFR2"
         self.periodIFR = periodIFR
         self.upper = upper
@@ -20,14 +20,14 @@ class IFR2(Robot):
         if closed:
             if self.canSendOrder():
                 rsi = self.RSI.values.iloc[-1]
-                print("----", rsi, self.lower)
-                if (rsi < self.lower) or True:
+                print("----BUY", rsi, self.lower)
+                if rsi < self.lower:
                     self.buyMarket()
                     print(self.nickName, "COMPRA")
             elif self.inPosition:
                 price = self.price()[-1]
                 mean = self.SMA.valeus.iloc[-1]
-                print("----", price, mean)
+                print("----SELL", price, mean)
                 if price > mean:
                     self.closePosition()
                     print(self.nickName, "VENDA")

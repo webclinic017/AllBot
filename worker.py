@@ -3,7 +3,7 @@ from src.database.Schemas import RobotSchema
 from src.database.Parsers import getRobotFromSchema
 from src.database.Connection import connection
 from settings import CELERY_BROKER_URL
-from src.mobileNotify.SendNotify import message
+from src.mobileNotify.SendNotify import sendTelegramMessage
 from bson import ObjectId
 from celery import Celery
 
@@ -17,7 +17,7 @@ def startRobot(id):
         datamanager.addObserver(getRobotFromSchema(robot))
         robot.status = 'active'
         robot.save()
-        message('Robô' + robot.nickName + ' ativado')
+        sendTelegramMessage('Robô' + robot.nickName + ' ativado')
 
 
 @app.task()
@@ -27,5 +27,5 @@ def stopRobot(id):
         datamanager.removeObserver(id)
         robot.status = 'inactive'
         robot.save()
-        message('Robô' + robot.nickName + ' desativado')
+        sendTelegramMessage('Robô' + robot.nickName + ' desativado')
 
