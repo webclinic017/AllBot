@@ -17,7 +17,7 @@ def startRobot(id):
         datamanager.addObserver(getRobotFromSchema(robot))
         robot.status = 'active'
         robot.save()
-        sendTelegramMessage('Robô' + robot.nickName + ' ativado')
+        sendTelegramMessage('Robô' + robot.nickName + ' ativado', robot.chatID)
 
 
 @app.task()
@@ -27,5 +27,5 @@ def stopRobot(id):
         datamanager.removeObserver(id)
         robot.status = 'inactive'
         robot.save()
-        sendTelegramMessage('Robô' + robot.nickName + ' desativado')
+        sendTelegramMessage('Robô' + robot.nickName + ' desativado', robot.chatID)
 
