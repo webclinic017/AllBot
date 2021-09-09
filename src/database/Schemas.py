@@ -87,3 +87,15 @@ class BollingerBandsSchema(RobotSchema):
                 "timeframe": self.timeframe,
                 "period": self.period,
                 "stdDeviation": self.stdDeviation}
+
+
+class BollingerBandsSchemaML(RobotSchema):
+    period = IntField(min_value=2, max_value=200, default=20)
+    stdDeviation = FloatField(min_value=0, max_value=3, default=2)
+
+    def comb(self):
+        return {"type": "BOLLINGERBANDSML",
+                "symbol": self.symbol,
+                "timeframe": self.timeframe,
+                "period": self.period,
+                "stdDeviation": self.stdDeviation}

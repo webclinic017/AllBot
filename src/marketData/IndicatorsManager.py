@@ -20,7 +20,15 @@ class Indicator:
             self.values = ta.volatility.bollinger_lband_indicator(prices, self.params[2], self.params[3])
         elif self.params[0] == 'BBUpper':
             self.values = ta.volatility.bollinger_hband_indicator(prices, self.params[2], self.params[3])
-
+        elif self.params[0] == 'Volatility10':
+            prices['Return'] = prices['Close'].pct_change()   # Retorno percentual
+            self.values = prices['Return'].rolling(10).std()  # Volatilidade dos últimos x dias
+        elif self.params[0] == 'CumVolatility10':
+            prices['Return'] = prices['Close'].pct_change()   # Retorno percentual
+            prices['H'] = prices['Return'].rolling(10).std()  # Volatilidade dos últimos x dias
+            self.values = prices['H'].rolling(5).sum()        # Volatildiade acumulada dos últimos x dias
+        elif self.params[0] == 'DistanceOfMean80':
+            self.values = prices['Close'] - prices['Close'].rolling(80).mean()  # Distância entre o preço de hoje e a média Longa
 
 class IndicatorManager:
     _instance = None
@@ -36,7 +44,7 @@ class IndicatorManager:
 
     def getIndicator(self, comb, params):
         if comb not in self.prices:
-            self.prices[comb] = self.getLastPrices(comb, 200)
+            self.prices[comb] = self.getLastPrices(comb, 300)
         if comb not in self.indicators:
             self.indicators[comb] = []
         for ind in self.indicators[comb]:
@@ -52,7 +60,7 @@ class IndicatorManager:
             return self.prices[comb]
 
     def newData(self, comb, data):
-        self.prices[comb] = self.getLastPrices(comb, 200)
+        self.prices[comb] = self.getLastPrices(comb, 300)
         if comb in self.indicators:
             for indicator in self.indicators[comb]:
                 indicator.calc(self.prices[comb])
