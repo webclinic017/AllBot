@@ -1,5 +1,6 @@
 from src.robots.Robot import Robot
 from src.marketData.IndicatorsManager import indicators
+from src.mobileNotify.SendNotify import sendTelegramMessage
 import pickle
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
@@ -23,31 +24,36 @@ class BollingerBandsML(Robot):
 
     def newData(self, data, closed):
         """Notificação de novos dados"""
-        if closed:
-            if self.canSendOrder():
-                price = self.price()[-1]
-                bblower = self.BBLower.values.iloc[-1]
-                bblowerShift = self.BBLower.values.iloc[-2]
-                volatility10 = self.Volatility10.values.iloc[-1]
-                cumVolatility10 = self.CumVolatility10.values.iloc[-1]
-                distanceOfMean80 = self.DistanceOfMean80.values.iloc[-1]
+        if self.canSendOrder():
+            price = self.price()[-1]
+            bblower = self.BBLower.values.iloc[-1]
+            bblowerShift = self.BBLower.values.iloc[-2]
+            volatility10 = self.Volatility10.values.iloc[-1]
+            cumVolatility10 = self.CumVolatility10.values.iloc[-1]
+            distanceOfMean80 = self.DistanceOfMean80.values.iloc[-1]
 
-                predDF = pd.DataFrame()
-                predDF['H'] = volatility10[-2:]
-                predDF['I'] = cumVolatility10[-2:]
-                predDF['F'] = distanceOfMean80[-2:]
-                predict = self.model.predict(predDF)[-1]
+            predDF = pd.DataFrame()
+            predDF['H'] = volatility10[-2:]
+            predDF['I'] = cumVolatility10[-2:]
+            predDF['F'] = distanceOfMean80[-2:]
+            predict = self.model.predict(predDF)[-1]
 
-                print("----BUY", price, bblowerShift, bblower)
-                if bblowerShift and (not bblower) and predict:
+            print("----BUY", price, bblowerShift, bblower)
+            if bblowerShift and (not bblower) and predict:
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Compra ' + self.nickName, self.chatID)
+                else:
                     self.buyMarket()
-                    print(self.nickName, "COMPRA")
-            elif self.inPosition:
-                price = self.price()[-1]
-                bbupper = self.BBUpper.values.iloc[-1]
-                bbupperShift = self.BBUpper.values.iloc[-2]
+                print(self.nickName, "COMPRA")
+        elif self.inPosition:
+            price = self.price()[-1]
+            bbupper = self.BBUpper.values.iloc[-1]
+            bbupperShift = self.BBUpper.values.iloc[-2]
 
-                print("----SELL", price, bbupper, bbupperShift)
-                if bbupper:
+            print("----SELL", price, bbupper, bbupperShift)
+            if bbupper:
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Venda ' + self.nickName, self.chatID)
+                else:
                     self.closePosition()
-                    print(self.nickName, "VENDA")
+                print(self.nickName, "VENDA")

@@ -1,6 +1,6 @@
 from src.robots.Robot import Robot
 from src.marketData.IndicatorsManager import indicators
-
+from src.mobileNotify.SendNotify import sendTelegramMessage
 
 class CrossAverage(Robot):
     """Define o robô com a estratégia de cruzamento de médias móveis"""
@@ -16,25 +16,31 @@ class CrossAverage(Robot):
     def newData(self, data, closed):
         """Notificação de novos dados"""
 
-        if closed:
-            if self.canSendOrder():
-                mFastShift1 = self.smaFast.iloc[-2]
-                mSlowShift1 = self.smaSlow.iloc[-2]
+        if self.canSendOrder():
+            mFastShift1 = self.smaFast.values.iloc[-2]
+            mSlowShift1 = self.smaSlow.values.iloc[-2]
 
-                mFastShift2 = self.smaFast.iloc[-3]
-                mSlowShift2 = self.smaSlow.iloc[-3]
+            mFastShift2 = self.smaFast.values.iloc[-3]
+            mSlowShift2 = self.smaSlow.values.iloc[-3]
 
-                if mFastShift1 > mSlowShift1 and (mFastShift2 < mSlowShift2):
+            if mFastShift1 > mSlowShift1 and (mFastShift2 < mSlowShift2):
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Compra ' + self.nickName, self.chatID)
+                else:
                     self.buyMarket()
-                    print(self.nickName, "COMPRA")
+                print(self.nickName, "COMPRA")
 
-            elif self.inPosition:
-                mFastShift1 = self.smaFast.iloc[-2]
-                mSlowShift1 = self.smaSlow.iloc[-2]
+        elif self.inPosition:
+            mFastShift1 = self.smaFast.values.iloc[-2]
+            mSlowShift1 = self.smaSlow.values.iloc[-2]
 
-                mFastShift2 = self.smaFast.iloc[-3]
-                mSlowShift2 = self.smaSlow.iloc[-3]
-                if mFastShift1 < mSlowShift1 and (mFastShift2 > mSlowShift2):
-                    self.sellMarket()
-                    print(self.nickName, "VENDA")
+            mFastShift2 = self.smaFast.values.iloc[-3]
+            mSlowShift2 = self.smaSlow.values.iloc[-3]
+
+            if mFastShift1 < mSlowShift1 and (mFastShift2 > mSlowShift2):
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Venda ' + self.nickName, self.chatID)
+                else:
+                    self.closePosition()
+                print(self.nickName, "VENDA")
 

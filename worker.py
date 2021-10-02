@@ -7,6 +7,7 @@ from src.mobileNotify.SendNotify import sendTelegramMessage
 from bson import ObjectId
 from celery import Celery
 
+
 app = Celery('tasks', broker=CELERY_BROKER_URL)
 
 
@@ -17,7 +18,7 @@ def startRobot(id):
         datamanager.addObserver(getRobotFromSchema(robot))
         robot.status = 'active'
         robot.save()
-        sendTelegramMessage('Robô' + robot.nickName + ' ativado', robot.chatID)
+        sendTelegramMessage('O seu Robô: ' + robot.nickName + ' acabou de ser ativado', robot.chatID)
 
 
 @app.task()
@@ -27,5 +28,9 @@ def stopRobot(id):
         datamanager.removeObserver(id)
         robot.status = 'inactive'
         robot.save()
-        sendTelegramMessage('Robô' + robot.nickName + ' desativado', robot.chatID)
+        sendTelegramMessage('O seu Robô: ' + robot.nickName + ' acabou de ser desativado', robot.chatID)
+
+
+
+#startRobot("615871ce759a368517ecfc05")
 

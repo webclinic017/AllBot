@@ -1,5 +1,6 @@
 from src.robots.Robot import Robot
 from src.marketData.IndicatorsManager import indicators
+from src.mobileNotify.SendNotify import sendTelegramMessage
 
 
 class BollingerBands(Robot):
@@ -15,23 +16,28 @@ class BollingerBands(Robot):
 
     def newData(self, data, closed):
         """Notificação de novos dados"""
-        if closed:
-            if self.canSendOrder():
-                price = self.price()[-1]
-                bblower = self.BBLower.values.iloc[-1]
-                bblowerShift = self.BBLower.values.iloc[-2]
+        if self.canSendOrder():
+            price = self.price()[-1]
+            bblower = self.BBLower.values.iloc[-1]
+            bblowerShift = self.BBLower.values.iloc[-2]
 
-                print("----BUY", price, bblowerShift, bblower)
-                if bblowerShift and (not bblower):
+            print("----BUY", price, bblowerShift, bblower)
+            if bblowerShift and (not bblower):
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Compra ' + self.nickName, self.chatID)
+                else:
                     self.buyMarket()
-                    print(self.nickName, "COMPRA")
-            elif self.inPosition:
-                price = self.price()[-1]
-                bbupper = self.BBUpper.values.iloc[-1]
-                bbupperShift = self.BBUpper.values.iloc[-2]
+                print(self.nickName, "COMPRA")
+        elif self.inPosition:
+            price = self.price()[-1]
+            bbupper = self.BBUpper.values.iloc[-1]
+            bbupperShift = self.BBUpper.values.iloc[-2]
 
-                print("----SELL", price, bbupper, bbupperShift)
-                if bbupper:
+            print("----SELL", price, bbupper, bbupperShift)
+            if bbupper:
+                if self.onlyNotify:
+                    sendTelegramMessage('Sinal de Venda ' + self.nickName, self.chatID)
+                else:
                     self.closePosition()
-                    print(self.nickName, "VENDA")
+                print(self.nickName, "VENDA")
 

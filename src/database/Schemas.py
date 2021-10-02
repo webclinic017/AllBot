@@ -24,6 +24,7 @@ class PositionSchema(EmbeddedDocument):
     closeQuantity = FloatField()
     closeCummulativeQuoteQty = FloatField()
     profit = FloatField()
+    profitPercentage = FloatField()
     openResult = FloatField()
     open = BooleanField(default=False)
     side = StringField(require=True)

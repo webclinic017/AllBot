@@ -70,8 +70,10 @@ class IndicatorManager:
 
     def getLastPrices(self, comb, num):
         symbol, interval = comb.split('/')
-        spot_client = Client(base_url="https://testnet.binance.vision")
+        spot_client = Client(base_url="https://api.binance.com")
         return pd.DataFrame(spot_client.klines(symbol, interval, limit=num))[4].astype('float64')
 
 if IndicatorManager._instance is None:
     indicators = IndicatorManager()
+
+
