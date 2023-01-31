@@ -12,12 +12,14 @@ import json
 def getBacktest(robot):
     if isinstance(robot, IFR2Schema):
         df = getCandles(robot.symbol, robot.timeframe)
-        bt = Backtest(df, IFR2Backtest, cash=100000, commission=0, exclusive_orders=False)
+        bt = Backtest(df, IFR2Backtest, cash=100000,
+                      commission=0, exclusive_orders=False)
         return bt.run().to_json()
 
     elif isinstance(robot, CrossAverageSchema):
         df = getCandles(robot.symbol, robot.timeframe)
-        bt = Backtest(df, CrossAverageBacktest, cash=100000, commission=0, exclusive_orders=False)
+        bt = Backtest(df, CrossAverageBacktest, cash=100000,
+                      commission=0, exclusive_orders=False)
         return bt.run().to_json()
 
 
@@ -30,7 +32,8 @@ def generateStats():
         for symbol in symbols:
             df = getCandles(symbol, timeframe)
             for robot in robots:
-                bt = Backtest(df, robot, cash=100000, commission=0, exclusive_orders=False)
+                bt = Backtest(df, robot, cash=100000,
+                              commission=0, exclusive_orders=False)
                 result = json.loads(bt.run().to_json())
                 result.pop("_strategy")
                 for key in result.keys():
@@ -40,7 +43,8 @@ def generateStats():
 
 
 def getCandles(symbol, timeframe):
-    df = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close_time'])
+    df = pd.DataFrame(columns=['Date', 'Open', 'High',
+                      'Low', 'Close', 'Volume', 'Close_time'])
     spot_client = Client(base_url="https://testnet.binance.vision")
     candles = spot_client.klines(symbol, timeframe, limit=1000)
     opentime, lopen, lhigh, llow, lclose, lvol, closetime = [], [], [], [], [], [], []
