@@ -94,3 +94,15 @@ def getRobotFromSchema(robotSchema):
         return BollingerBandsFromSchema(robotSchema)
     if isinstance(robotSchema, BollingerBandsSchemaML):
         return BollingerBandsFromSchemaML(robotSchema)
+
+
+def robotDTO(robot):
+    if robot['_cls'] == "RobotSchema.IFR2Schema":
+        robot['type'] = "IFR2"
+    elif robot['_cls'] == "RobotSchema.CrossAverageSchema":
+        robot['type'] = "CrossAverage"
+    robot['id'] = robot['_id']['$oid']
+    robot['owner'] = robot['owner']['$oid']
+    robot.pop("_cls")
+    robot.pop("_id")
+    return robot
